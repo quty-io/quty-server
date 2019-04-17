@@ -15,20 +15,4 @@ const cluster = new quty.Cluster(config.cluster);
     console.error(e);
     process.exit(1);
   }
-
-  // tests TODO remove:
-  try {
-    let token = cluster.createToken({
-      dc: 'europe'
-    });
-    let cObj = new quty.Client({
-      url: 'ws://localhost:23032',
-      token
-    });
-    console.log(token);
-    await cObj.connect();
-    console.log("All done bro, Connected");
-  } catch (e) {
-    console.log(e);
-  }
 })();
