@@ -3,6 +3,8 @@
   "author": "UNLOQ Systems",
   "version": "0.0.1",
   "dependencies": {
+    "safe-json-stringify": "1.2.0",
+    "ws": "6.2.1"
   },
   "description": "Quty.io event streaming server",
   "main": "index.js",
@@ -14,5 +16,9 @@
   "homepage": "https://quty.io",
   "bugs": {
     "url": "https://github.com/quty-io/quty-server/issues"
+  },
+  "optionalDependencies": {
+    "bufferutil": "4.0.1",
+    "utf-8-validate": "5.0.2"
   }
 }
