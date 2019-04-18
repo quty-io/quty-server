@@ -3,19 +3,13 @@
  * This is an example Quty server working in cluster mode with
  * other quty servers.
  * */
-
-/* TEMPORARY OVERRIDES */
-//process.env.CLUSTER_DISCOVERY_NODES = "127.0.0.1:23032,127.0.0.1:23033";
-process.env.CLUSTER_DISCOVERY_SERVICE = 'localhost';
+process.env.CLUSTER_DISCOVERY_NODES = "127.0.0.1:23032,127.0.0.1:23033";
 const config = require('./config/app');
 const quty = require('./index.js'); // change this with require('quty');
 if (config.debug) quty.log.setLevel(config.debug);
-
-
+const cluster = new quty.Cluster(config.cluster);
+config.cluster.port = 23033;
 (async () => {
-  const channelHub = new quty.ChannelHub();
-  const cluster = new quty.Cluster(config.cluster, channelHub);
-
   /* Start the internal cluster server */
   try {
     await cluster.listen();
@@ -25,8 +19,9 @@ if (config.debug) quty.log.setLevel(config.debug);
   }
   /* Initiate the discovery process for the cluster */
   cluster.startDiscovery();
+  console.log("===========================");
   const log = quty.log;
-  channelHub
+  cluster.hub
     .on('channel.add', (name) => {
       log.info(`Adding channel: ${name}`);
     })
@@ -48,21 +43,14 @@ if (config.debug) quty.log.setLevel(config.debug);
     .on('client.leave', (c, cid) => {
       log.info(`Client ${cid} left: ${c}`);
     });
+
   setTimeout(() => {
-    console.log("===========================");
-
-    channelHub.subscribeNode(cluster.id, 'channel1');
-
-    let i = 0;
-    setInterval(() => {
-      channelHub.sendMessage('channel1', 'Hello world' + i, cluster.id);
-      i++;
-      if (i === 5) {
-        console.log("UNSUBSCRIBE");
-        channelHub.unsubscribeNode(cluster.id, 'channel1');
-      }
-    }, 1000);
-
-    console.log("===========================");
+    console.log("Subscribing node");
+    cluster.hub.subscribeNode(cluster.id, 'channel1');
   }, 2000);
+
+  setTimeout(() => {
+    console.log("Unsubscribing node");
+     cluster.hub.unsubscribeNode(cluster.id, 'channel1');
+  }, 10000);
 })();

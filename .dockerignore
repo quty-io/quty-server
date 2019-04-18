@@ -1,6 +1,7 @@
 node_modules
 *.log
 .git
+nodemon.json
 .idea
 README.md
 .editorconfig

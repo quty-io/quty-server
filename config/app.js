@@ -10,7 +10,11 @@ const config = {
   cluster: {
     namespace: 'quty', // The namespace we use for various actions
     port: 23032,  // The HTTP Port to use for cluster-node communication. This should not be exposed.
-    auth: null    // The authorisation secret used by cluster-node communication. This acts as a simple secret.
+    auth: null,    // The authorisation secret used by cluster-node communication. This acts as a simple secret.
+    discovery: {
+      nodes: [],     // an array of "{ip}:{port}" cluster nodes to connect to
+      service: null,  // The Kubernetes hostname of the service (eg: quty.app.svc.cluster.local)
+    }
   },
   hub: {
     port: 8082,    // The HTTP Port to use for publicly-available client connections.
@@ -28,6 +32,16 @@ if (env.CLUSTER_PORT) {
 }
 if (env.CLUSTER_AUTH) {
   config.cluster.auth = env.CLUSTER_AUTH;
+}
+if (env.CLUSTER_DISCOVERY_NODES) {
+  let nodes = env.CLUSTER_DISCOVERY_NODES.replace(/,/g, ';').replace(/ /g, ';').split(';');
+  nodes.forEach((n) => {
+    if (n.trim() === '') return;
+    config.cluster.discovery.nodes.push(n.trim());
+  });
+}
+if (env.CLUSTER_DISCOVERY_SERVICE) {
+  config.cluster.discovery.service = env.CLUSTER_DISCOVERY_SERVICE;
 }
 
 if (env.HUB_PORT) {
