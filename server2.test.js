@@ -3,7 +3,7 @@
  * This is an example Quty server working in cluster mode with
  * other quty servers.
  * */
-process.env.CLUSTER_DISCOVERY_NODES = "127.0.0.1:23032,127.0.0.1:23033";
+//process.env.CLUSTER_DISCOVERY_NODES = "127.0.0.1:23032,127.0.0.1:23033";
 const config = require('./config/app');
 const quty = require('./index.js'); // change this with require('quty');
 if (config.debug) quty.log.setLevel(config.debug);
@@ -40,17 +40,21 @@ config.cluster.port = 23033;
     .on('client.join', (c, cid) => {
       log.info(`Client ${cid} joined: ${c}`);
     })
+    .on('client.message', (channel, clientId, message) => {
+      log.info(`=> SEND TO ${channel}.${clientId}: ${message}`);
+    })
     .on('client.leave', (c, cid) => {
       log.info(`Client ${cid} left: ${c}`);
     });
-
+  console.log("Subscribing node");
+  cluster.hub.subscribeNode(cluster.id, 'channel1');
+  return;
   setTimeout(() => {
-    console.log("Subscribing node");
-    cluster.hub.subscribeNode(cluster.id, 'channel1');
+
   }, 2000);
 
   setTimeout(() => {
     console.log("Unsubscribing node");
-     cluster.hub.unsubscribeNode(cluster.id, 'channel1');
+    cluster.hub.unsubscribeNode(cluster.id, 'channel1');
   }, 10000);
 })();

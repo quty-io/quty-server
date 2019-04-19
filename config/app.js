@@ -13,7 +13,9 @@ const config = {
     auth: null,    // The authorisation secret used by cluster-node communication. This acts as a simple secret.
     discovery: {
       nodes: [],     // an array of "{ip}:{port}" cluster nodes to connect to
-      service: null,  // The Kubernetes hostname of the service (eg: quty.app.svc.cluster.local)
+      service: null,  // The Kubernetes (or any, really) hostname of the service (eg: quty.app.svc.cluster.local) we will DNS_resolve and use the IPs to connect to the nodes.
+      fetch: null,    // An HTTP(s) API endpoint to call to retrieve the array of nodes to connect to.
+      timer: 3000     // The number of milliseconds we try to discover new nodes.
     }
   },
   hub: {
@@ -24,6 +26,9 @@ const config = {
 
 /** ENVIRONMENT-loading of configuration */
 const env = process.env;
+if (env.CLUSTER_DEBUG) {
+  config.debug = env.CLUSTER_DEBUG;
+}
 if (env.CLUSTER_NAMESPACE) {
   config.cluster.namespace = env.CLUSTER_NAMESPACE;
 }
@@ -39,6 +44,9 @@ if (env.CLUSTER_DISCOVERY_NODES) {
     if (n.trim() === '') return;
     config.cluster.discovery.nodes.push(n.trim());
   });
+}
+if (env.CLUSTER_DISCOVERY_FETCH) {
+  config.cluster.discovery.fetch = env.CLUSTER_DISCOVERY_FETCH;
 }
 if (env.CLUSTER_DISCOVERY_SERVICE) {
   config.cluster.discovery.service = env.CLUSTER_DISCOVERY_SERVICE;
