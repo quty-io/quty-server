@@ -7,7 +7,7 @@
 /* TEMPORARY OVERRIDES */
 process.env.CLUSTER_DISCOVERY_NODES = "127.0.0.1:23032,127.0.0.1:23033";
 process.env.CLUSTER_DISCOVERY_SERVICE = 'localhost';
-process.env.CLUSTER_DISCOVERY_FETCH = 'http://localhost:8678/quty-discovery?test=1';
+//process.env.CLUSTER_DISCOVERY_FETCH = 'http://localhost:8678/quty-discovery?test=1';
 
 const config = require('./config/app');
 const quty = require('./index.js'); // change this with require('quty');
@@ -15,8 +15,10 @@ if (config.debug) quty.log.setLevel(config.debug);
 
 
 (async () => {
-  const channelHub = new quty.ChannelHub();
-  const cluster = new quty.Cluster(config.cluster, channelHub);
+  const cluster = new quty.Cluster(config.cluster);
+
+
+  const channelHub = cluster.hub;
   const log = quty.log;
 
   /** DEBUGGING/TESTING */
@@ -56,28 +58,6 @@ if (config.debug) quty.log.setLevel(config.debug);
   }
   cluster.on('ready', () => {
     console.log("WE'RE READY NOW");
-    return
-
-    setTimeout(() => {
-      console.log("===========================");
-
-      channelHub.subscribeClient(cluster.id, 'client1', 'channel1');
-      channelHub.sendMessage('channel1', 'message', cluster.id);
-      return;
-
-      channelHub.subscribeNode(cluster.id, 'channel1');
-
-      let i = 0;
-      setInterval(() => {
-        channelHub.sendMessage('channel1', 'Hello world' + i, cluster.id);
-        i++;
-        if (i === 1000) {
-          console.log("UNSUBSCRIBE");
-          channelHub.unsubscribeNode(cluster.id, 'channel1');
-        }
-      }, 100);
-
-      console.log("===========================");
-    }, 2000);
+    let ok = cluster.sendMessage('channel1', 'Hello world!');
   });
 })();

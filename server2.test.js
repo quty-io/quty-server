@@ -47,7 +47,7 @@ config.cluster.port = 23033;
       log.info(`Client ${cid} left: ${c}`);
     });
   console.log("Subscribing node");
-  cluster.hub.subscribeNode(cluster.id, 'channel1');
+  cluster.hub.subscribeNode(cluster.id, 'channel1x');
   return;
   setTimeout(() => {
 

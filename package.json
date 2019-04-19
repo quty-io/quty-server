@@ -3,6 +3,8 @@
   "author": "UNLOQ Systems",
   "version": "0.0.1",
   "dependencies": {
+    "engine.io": "^3.3.2",
+    "engine.io-client": "^3.3.2",
     "safe-json-stringify": "1.2.0",
     "ws": "6.2.1"
   },
