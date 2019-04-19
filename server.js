@@ -17,38 +17,6 @@ if (config.debug) quty.log.setLevel(config.debug);
 (async () => {
   const cluster = new quty.Cluster(config.cluster);
 
-
-  const channelHub = cluster.hub;
-  const log = quty.log;
-
-  /** DEBUGGING/TESTING */
-
-  channelHub
-    .on('channel.add', (name) => {
-      log.info(`Adding channel: ${name}`);
-    })
-    .on('channel.message', (channel, msg) => {
-      log.info(`Message in ${channel}: ${msg}`);
-    })
-    .on('channel.remove', (name) => {
-      log.info(`Removing channel: ${name}`);
-    })
-    .on('node.join', (c, sid) => {
-      log.info(`Node ${sid} joined: ${c}`);
-    })
-    .on('node.leave', (c, sid) => {
-      log.info(`Node ${sid} left: ${c}`);
-    })
-    .on('client.join', (c, cid) => {
-      log.info(`Client ${cid} joined: ${c}`);
-    })
-    .on('client.message', (channel, clientId, message) => {
-      log.info(`=> SEND TO ${channel}.${clientId}: ${message}`);
-    })
-    .on('client.leave', (c, cid) => {
-      log.info(`Client ${cid} left: ${c}`);
-    });
-
   /* Start the internal cluster server */
   try {
     await cluster.listen();
@@ -56,8 +24,4 @@ if (config.debug) quty.log.setLevel(config.debug);
     console.error(e);
     return process.exit(1);
   }
-  cluster.on('ready', () => {
-    console.log("WE'RE READY NOW");
-    let ok = cluster.sendMessage('channel1', 'Hello world!');
-  });
 })();

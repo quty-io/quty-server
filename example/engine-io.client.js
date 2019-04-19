@@ -61,7 +61,7 @@ const EIO_SERVER = arg.host || `ws://127.0.0.1:23000`;
         message: `Hello world! [${EIO_SERVER} - ${new Date().toISOString()}]`
       });
       setTimeout(async () => {
-        return; // Remove this to leave the channel.
+        if (EIO_SERVER.indexOf('24001') === -1) return;
         console.log('Leaving channel1');
         await send(socket, 'leave', {
           channel: 'channel1'
