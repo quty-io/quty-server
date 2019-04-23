@@ -6,7 +6,7 @@
     "engine.io": "^3.3.2",
     "engine.io-client": "^3.3.2",
     "safe-json-stringify": "1.2.0",
-    "ws": "6.2.1"
+    "ws": "6.1.x"
   },
   "description": "Quty.io event streaming server",
   "main": "index.js",
@@ -18,6 +18,9 @@
   "homepage": "https://quty.io",
   "bugs": {
     "url": "https://github.com/quty-io/quty-server/issues"
+  },
+  "engines": {
+    "node": ">8.x"
   },
   "optionalDependencies": {
     "bufferutil": "4.0.1",

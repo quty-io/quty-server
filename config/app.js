@@ -16,7 +16,8 @@ const config = {
       service: null,  // The Kubernetes (or any, really) hostname of the service (eg: quty.app.svc.cluster.local) we will DNS_resolve and use the IPs to connect to the nodes.
       fetch: null,    // An HTTP(s) API endpoint to call to retrieve the array of nodes to connect to.
       timer: 3000     // The number of milliseconds we try to discover new nodes.
-    }
+    },
+    maxReadyAfter: 4000 // The maximum number of ms the server will emit the 'ready' state. Setting this to 0 will not wait for the cluster state before triggering 'ready'
   },
   hub: {
     port: 8082,    // The HTTP Port to use for publicly-available client connections.

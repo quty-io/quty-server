@@ -5,7 +5,7 @@
  * */
 
 /* TEMPORARY OVERRIDES */
-process.env.CLUSTER_DISCOVERY_NODES = "127.0.0.1:23032,127.0.0.1:23033";
+//process.env.CLUSTER_DISCOVERY_NODES = "127.0.0.1:23032,127.0.0.1:23033";
 process.env.CLUSTER_DISCOVERY_SERVICE = 'localhost';
 //process.env.CLUSTER_DISCOVERY_FETCH = 'http://localhost:8678/quty-discovery?test=1';
 
@@ -24,4 +24,7 @@ if (config.debug) quty.log.setLevel(config.debug);
     console.error(e);
     return process.exit(1);
   }
+  cluster.on('ready', async () => {
+    console.log('Quty started');
+  });
 })();
