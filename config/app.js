@@ -52,6 +52,9 @@ if (env.CLUSTER_DISCOVERY_FETCH) {
 if (env.CLUSTER_DISCOVERY_SERVICE) {
   config.cluster.discovery.service = env.CLUSTER_DISCOVERY_SERVICE;
 }
+if (env.CLUSTER_DISCOVERY_TIMER) {
+  config.cluster.discovery.timer = parseInt(env.CLUSTER_DISCOVERY_TIMER, 10);
+}
 
 if (env.HUB_PORT) {
   config.hub.port = parseInt(env.HUB_PORT);

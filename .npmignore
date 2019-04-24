@@ -4,3 +4,4 @@ node_modules
 .dockerignore
 .editorconfig
 example/
+config/nginx.conf
