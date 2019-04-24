@@ -41,7 +41,12 @@ if (arg.nodes) {
     // Configure engine.io
     const server = eio.listen(EIO_PORT);
     log.info(`Engine.io listening on: ${EIO_PORT}`);
-
+    cluster.hub.on('client.remove', (clientId) => {
+      let client = server.clients[clientId];
+      if (!client) return;
+      log.info(`[engine] Kicking client from server`);
+      client.terminate();
+    });
     // Start listening for messages from the quty internal cluster
     cluster.on('message', (channel, clientId, message) => {
       let client = server.clients[clientId];
